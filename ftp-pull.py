@@ -5,10 +5,10 @@
 
 #### CONFIG ####################################################################
 
-# Login information and server URL
+# Login information and server URL /// Input your own information here
 username = ''
 password = ''
-ftp_url = 'ftp.debian.org/debian/'
+ftp_url = ''
 
 # Where you want the files to save
 local_path = './'
