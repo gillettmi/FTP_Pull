@@ -15,6 +15,8 @@ local_path = './'
 
 # Remote locations to pull files from
 file_pull = '/'
+#file_pull-2 = '~/file_pull-2'
+#file_pull-3 = '~/file_pull-3'
 
 # File extensions /// Specify which file extensions you want the program to look for
 extensions = ('.txt')
@@ -113,6 +115,8 @@ while True:
         # simply copy and paste ftp_pull() and create a new file_pull variable
         # in the config section up above. See examples commented below.
         ftp_pull(file_pull)
+        #ftp_pull(file_pull-2)
+        #ftp_pull(file_pull-3)
     except error_perm:                          # Incorrect directory config
         logging.info('ERROR: The system cannot find the file specified. Please reconfigure the specified directory and try again.')
         break
