@@ -25,7 +25,7 @@ overwrite = True
 #### FUNCTIONS #################################################################
 
 from ftplib import FTP, error_perm
-import os.path
+import os.path, logging
 
 ftp = FTP(ftp_url)
 
@@ -33,9 +33,9 @@ ftp = FTP(ftp_url)
 # Acual download function /// this is used if the file meets all of the software checks.
 def download(local_filename, remote_size, filename):
     file = open(local_filename, 'wb')
-    print('Downloading file: {0} | Filesize: {1} GB'.format(local_filename, round(remote_size/ 1000000000), 2))
+    logging.info('Downloading file: {0} | Filesize: {1} GB'.format(local_filename, round(remote_size/ 1000000000), 2))
     ftp.retrbinary('RETR '+ filename, file.write)
-    print(filename, 'downloaded')
+    logging.info(filename, 'downloaded')
 
 
 # Pull file from FTP site
@@ -46,27 +46,27 @@ def ftp_pull(ftp_path):
         try:
             os.makedirs(local_path)
         except PermissionError:
-            print('ERROR: Insuffecient permissions. Unable to make new directory at', local_path)
-    print('Downloading files to', local_path)
+            logging.info('ERROR: Insuffecient permissions. Unable to make new directory at {0}'.format(local_path))
+    logging.info('Downloading files to {0}'.format(local_path))
 
     # Change directory
-    print('Moving to', ftp_path)
+    logging.info('Moving to {0}'.format(ftp_path))
     ftp.cwd(ftp_path)
 
     # Get names of all files in folder
     filenames = ftp.nlst()
-    print('Files in folder:\n',filenames)
+    logging.info('Files in folder:{0}'.format(filenames))
 
     # for loop to get all files in folder
     for filename in filenames:
 
         # Only downloads files with given extensions
-        if filename.endswith(extensions):            
+        if filename.endswith(extensions):
 
             # Get filename and size of remote files
-            local_filename = os.path.join(local_path, filename)                
+            local_filename = os.path.join(local_path, filename)
             remote_size = ftp.size(filename)
-            
+
             # Don't download if it already exists
             if os.path.isfile(local_filename):
 
@@ -75,20 +75,20 @@ def ftp_pull(ftp_path):
 
                 # If local file is smaller than the remote file, delete local and re-download (only if overwrite == True)
                 if local_size != remote_size:
-                    print('File on server is larger than local file. The previous download may have failed.')
-                    
+                    logging.info('File on server is larger than local file. The previous download may have failed.')
+
                     # Only delete and re-download if overwrite == True (see config section)
                     if overwrite:
-                        print('Overwrite is set to True. Deleting previous files and re-downloading')
+                        logging.info('Overwrite is set to True. Deleting previous files and re-downloading')
                         try:
                             os.remove(local_filename)
                             download(local_filename, remote_size, filename)
                         except PermissionError:
-                            print('ERROR: Insuffecient permissions.')
+                            logging.info('ERROR: Insuffecient permissions.')
                     else:
-                        print('Overwrite is set to False. Existing file has been skipped.')
+                        logging.info('Overwrite is set to False. Existing file has been skipped.')
 
-                print('{0} already downloaded. Skipping.'.format(filename))
+                logging.info('{0} already downloaded. Skipping.'.format(filename))
                 pass
             else:
                 download(local_filename, remote_size, filename)
@@ -97,25 +97,25 @@ def ftp_pull(ftp_path):
 #### MAIN PROGRAM ##############################################################
 
 while True:
+    logging.basicConfig(level=logging.DEBUG, filename="ftp-pull-log.txt", filemode="a+",
+                            format="%(asctime)-15s %(levelname)-8s %(message)s")
     try: # Try to connect to FTP
         if username == '' and password == '':   # if username and password are blank, don't try to connect with them.
             ftp.login()
         else:
             ftp.login(username, password)       # connect with defined credentials
-        print('Connected to FTP client')
+        logging.info('Connected to FTP client')
     except error_perm:                          # incorrect user config
-        print('ERROR: Incorrect login credentials. Please enter the correct FTP username / password and try again.')
+        logging.info('ERROR: Incorrect login credentials. Please enter the correct FTP username / password and try again.')
         break
     try:
         # if you wish to download multiple files from the URL,
         # simply copy and paste ftp_pull() and create a new file_pull variable
         # in the config section up above. See examples commented below.
         ftp_pull(file_pull)
-        #ftp_pull(file_pull-2)
-        #ftp_pull(file_pull-3)
     except error_perm:                          # Incorrect directory config
-        print('ERROR: The system cannot find the file specified. Please reconfigure the specified directory and try again.')
+        logging.info('ERROR: The system cannot find the file specified. Please reconfigure the specified directory and try again.')
         break
     ftp.quit()
-    print('Disconnected from FTP client. You may now close the window.')
+    logging.info('Disconnected from FTP client. You may now close the window.')
     break
