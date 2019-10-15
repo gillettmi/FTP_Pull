@@ -14,7 +14,7 @@ ftp_url = ''
 local_path = './'
 
 # Remote locations to pull files from
-file_pull = '/'
+file_pull = './'
 #file_pull-2 = '~/file_pull-2'
 #file_pull-3 = '~/file_pull-3'
 
@@ -57,7 +57,7 @@ def ftp_pull(ftp_path):
 
     # Get names of all files in folder
     filenames = ftp.nlst()
-    logging.info('Files in folder:{0}'.format(filenames))
+    logging.info('Files in folder: {0}'.format(filenames))
 
     # for loop to get all files in folder
     for filename in filenames:
