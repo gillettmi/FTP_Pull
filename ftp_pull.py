@@ -13,16 +13,21 @@ ftp_url = ''
 # Where you want the files to save
 local_path = './'
 
-# Remote locations to pull files from
-file_pull = '/'
-#file_pull-2 = '~/file_pull-2'
-#file_pull-3 = '~/file_pull-3'
+# Remote locations to pull files from /// if you want to pull from more than one directory, uncomment and change the section below
+remote_directories = (
+    # '~/directory1/directory1',
+    # '~/directory1/directory2',
+    '~/directory/directory'
+    )
 
 # File extensions /// Specify which file extensions you want the program to look for
-extensions = ('.txt')
+extensions = ('.mp4', '.mpg', '.mov')
 
 # Set overwrite to True if you would like to overwrite files that may be incomplete downloads.
 overwrite = True
+
+# Log file location
+log_file = 'ftp_pull_log.txt'
 
 #### FUNCTIONS #################################################################
 
@@ -126,12 +131,8 @@ while True:
         logging.error('ERROR: Incorrect login credentials. Please enter the correct FTP username / password and try again.')
         break
     try:
-        # if you wish to download multiple files from the URL,
-        # simply copy and paste ftp_pull() and create a new file_pull variable
-        # in the config section up above. See examples commented below.
-        ftp_pull(file_pull)
-        #ftp_pull(file_pull-2)
-        #ftp_pull(file_pull-3)
+        for directory in remote_directories:
+            ftp_pull(directory)
     except error_perm:                          # Incorrect directory config
         logging.error('ERROR: The system cannot find the file specified. Please reconfigure the specified directory and try again.')
         break
