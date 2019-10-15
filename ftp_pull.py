@@ -27,15 +27,15 @@ overwrite = True
 #### FUNCTIONS #################################################################
 
 from ftplib import FTP, error_perm
-import os.path, logging
+import os.path
 
 ftp = FTP(ftp_url)
 
 
-# Acual download function /// this is used if the file meets all of the software checks.
+# Acual download function /// this is used if the file meets all of the checks in ftp_pull.
 def download(local_filename, remote_size, filename):
     file = open(local_filename, 'wb')
-    logging.info('Downloading file: {0} | Filesize: {1} GB'.format(local_filename, round(remote_size/ 1000000000), 2))
+    logging.info('Downloading file: {0} | Filesize: {1} GB'.format(local_filename, round((remote_size/ 1000000000), 2)))
     ftp.retrbinary('RETR '+ filename, file.write)
     logging.info(filename, 'downloaded')
 
@@ -49,7 +49,7 @@ def ftp_pull(ftp_path):
             os.makedirs(local_path)
         except PermissionError:
             logging.info('ERROR: Insuffecient permissions. Unable to make new directory at {0}'.format(local_path))
-    logging.info('Downloading files to {0}'.format(local_path))
+    logging.info('Downloading file to {0}'.format(local_path))
 
     # Change directory
     logging.info('Moving to {0}'.format(ftp_path))
@@ -57,7 +57,7 @@ def ftp_pull(ftp_path):
 
     # Get names of all files in folder
     filenames = ftp.nlst()
-    logging.info('Files in folder: {0}'.format(filenames))
+    logging.info('Files in folder:{0}'.format(filenames))
 
     # for loop to get all files in folder
     for filename in filenames:
@@ -73,11 +73,12 @@ def ftp_pull(ftp_path):
             if os.path.isfile(local_filename):
 
                 # Get the size of the existing file
-                local_size = os.stat(local_filename)
+
+                local_size = os.stat(local_filename).st_size
 
                 # If local file is smaller than the remote file, delete local and re-download (only if overwrite == True)
                 if local_size != remote_size:
-                    logging.info('Remote file size: {0}.\nLocal file size: {1}\nIt appears previous download may have failed.'.format(remote_size, local_size))
+                    logging.info('Remote file size: {0} bytes\nLocal file size: {1} bytes\nIt appears previous download may have failed.'.format(remote_size, local_size))
 
                     # Only delete and re-download if overwrite == True (see config section)
                     if overwrite:
