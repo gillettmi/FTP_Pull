@@ -107,10 +107,10 @@ def ftp_pull(ftp_path):
 while True:
     # Setup logging
     logging.basicConfig(
-        level=logging.DEBUG,
-        filename="ftp-pull-log.txt",
-        filemode="a+",
-        format="%(asctime)-15s %(levelname)-8s %(message)s"
+        level = logging.DEBUG,
+        filename = log_file,
+        filemode = 'a+',
+        format = '%(asctime)-15s %(levelname)-8s %(message)s'
         )
     # Define a Handler which writes INFO messages or higher to the sys.stderr
     console = logging.StreamHandler()
