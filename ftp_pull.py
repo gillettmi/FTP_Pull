@@ -18,7 +18,7 @@ local_path = './downloads'
 remote_directories = (
     # '~/directory1/directory1',
     # '~/directory1/directory2',
-    '~/directory/directory'
+    '~/directory/directory',
     )
 
 # File extensions /// Specify which file extensions you want the program to look for
