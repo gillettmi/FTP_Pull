@@ -11,7 +11,7 @@ password = ''
 ftp_url = ''
 
 # Where you want the files to save
-local_path = './'
+local_path = './downloads'
 
 # Remote locations to pull files from
 # if you want to pull from more than one directory, uncomment and change the section(s) below
