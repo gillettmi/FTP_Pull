@@ -78,12 +78,12 @@ def ftp_pull(ftp_path):
             if os.path.isfile(local_filename):
 
                 # Get the size of the existing file
-
                 local_size = os.stat(local_filename).st_size
+                logging.info('Remote file size: {0} bytes | Local file size: {1} bytes'.format(remote_size, local_size))
 
                 # If local file is smaller than the remote file, delete local and re-download (only if overwrite == True)
                 if local_size != remote_size:
-                    logging.info('Remote file size: {0} bytes | Local file size: {1} bytes | It appears previous download may have failed.'.format(remote_size, local_size))
+                    logging.info('File sizes are not the same. It appears previous download may have failed.'.format(remote_size, local_size))
 
                     # Only delete and re-download if overwrite == True (see config section)
                     if overwrite:
@@ -96,7 +96,7 @@ def ftp_pull(ftp_path):
                     else:
                         logging.info('Overwrite is set to False. Existing file has been skipped.')
 
-                logging.info('{0} already downloaded. Skipping.'.format(filename))
+                logging.info('File already downloaded. Skipping.')
                 pass
             else:
                 download(local_filename, remote_size, filename)
