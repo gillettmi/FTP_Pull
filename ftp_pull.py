@@ -13,7 +13,8 @@ ftp_url = ''
 # Where you want the files to save
 local_path = './'
 
-# Remote locations to pull files from /// if you want to pull from more than one directory, uncomment and change the section below
+# Remote locations to pull files from
+# if you want to pull from more than one directory, uncomment and change the section(s) below
 remote_directories = (
     # '~/directory1/directory1',
     # '~/directory1/directory2',
