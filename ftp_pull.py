@@ -14,7 +14,7 @@ ftp_url = ''
 local_path = './'
 
 # Remote locations to pull files from
-file_pull = './'
+file_pull = '/'
 #file_pull-2 = '~/file_pull-2'
 #file_pull-3 = '~/file_pull-3'
 
@@ -27,7 +27,7 @@ overwrite = True
 #### FUNCTIONS #################################################################
 
 from ftplib import FTP, error_perm
-import os.path
+import os.path, logging
 
 ftp = FTP(ftp_url)
 
@@ -48,7 +48,7 @@ def ftp_pull(ftp_path):
         try:
             os.makedirs(local_path)
         except PermissionError:
-            logging.info('ERROR: Insuffecient permissions. Unable to make new directory at {0}'.format(local_path))
+            logging.error('ERROR: Insuffecient permissions. Unable to make new directory at {0}'.format(local_path))
     logging.info('Downloading file to {0}'.format(local_path))
 
     # Change directory
@@ -78,7 +78,7 @@ def ftp_pull(ftp_path):
 
                 # If local file is smaller than the remote file, delete local and re-download (only if overwrite == True)
                 if local_size != remote_size:
-                    logging.info('Remote file size: {0} bytes\nLocal file size: {1} bytes\nIt appears previous download may have failed.'.format(remote_size, local_size))
+                    logging.info('Remote file size: {0} bytes | Local file size: {1} bytes | It appears previous download may have failed.'.format(remote_size, local_size))
 
                     # Only delete and re-download if overwrite == True (see config section)
                     if overwrite:
@@ -87,7 +87,7 @@ def ftp_pull(ftp_path):
                             os.remove(local_filename)
                             download(local_filename, remote_size, filename)
                         except PermissionError:
-                            logging.info('ERROR: Insuffecient permissions.')
+                            logging.error('ERROR: Insuffecient permissions.')
                     else:
                         logging.info('Overwrite is set to False. Existing file has been skipped.')
 
@@ -100,8 +100,22 @@ def ftp_pull(ftp_path):
 #### MAIN PROGRAM ##############################################################
 
 while True:
-    logging.basicConfig(level=logging.DEBUG, filename="ftp-pull-log.txt", filemode="a+",
-                            format="%(asctime)-15s %(levelname)-8s %(message)s")
+    # Setup logging
+    logging.basicConfig(
+        level=logging.DEBUG,
+        filename="ftp-pull-log.txt",
+        filemode="a+",
+        format="%(asctime)-15s %(levelname)-8s %(message)s"
+        )
+    # Define a Handler which writes INFO messages or higher to the sys.stderr
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+    # Tell the handler to use this format
+    console.setFormatter(formatter)
+    # Add the handler to the root logger
+    logging.getLogger('').addHandler(console)
+
     try: # Try to connect to FTP
         if username == '' and password == '':   # if username and password are blank, don't try to connect with them.
             ftp.login()
@@ -109,7 +123,7 @@ while True:
             ftp.login(username, password)       # connect with defined credentials
         logging.info('Connected to FTP client')
     except error_perm:                          # incorrect user config
-        logging.info('ERROR: Incorrect login credentials. Please enter the correct FTP username / password and try again.')
+        logging.error('ERROR: Incorrect login credentials. Please enter the correct FTP username / password and try again.')
         break
     try:
         # if you wish to download multiple files from the URL,
@@ -119,7 +133,7 @@ while True:
         #ftp_pull(file_pull-2)
         #ftp_pull(file_pull-3)
     except error_perm:                          # Incorrect directory config
-        logging.info('ERROR: The system cannot find the file specified. Please reconfigure the specified directory and try again.')
+        logging.error('ERROR: The system cannot find the file specified. Please reconfigure the specified directory and try again.')
         break
     ftp.quit()
     logging.info('Disconnected from FTP client. You may now close the window.')
