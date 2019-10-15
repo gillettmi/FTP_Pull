@@ -55,7 +55,6 @@ def ftp_pull(ftp_path):
             os.makedirs(local_path)
         except PermissionError:
             logging.error('ERROR: Insuffecient permissions. Unable to make new directory at {0}'.format(local_path))
-    logging.info('Downloading file to {0}'.format(local_path))
 
     # Change directory
     logging.info('Moving to {0}'.format(ftp_path))
@@ -132,6 +131,7 @@ while True:
         logging.error('ERROR: Incorrect login credentials. Please enter the correct FTP username / password and try again.')
         break
     try:
+        logging.info('Downloading file to {0}'.format(local_path))
         for directory in remote_directories:
             ftp_pull(directory)
     except error_perm:                          # Incorrect directory config
