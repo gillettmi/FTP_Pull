@@ -77,7 +77,7 @@ def ftp_pull(ftp_path):
 
                 # If local file is smaller than the remote file, delete local and re-download (only if overwrite == True)
                 if local_size != remote_size:
-                    logging.info('File on server is larger than local file. The previous download may have failed.')
+                    logging.info('Remote file size: {0}.\nLocal file size: {1}\nIt appears previous download may have failed.'.format(remote_size, local_size))
 
                     # Only delete and re-download if overwrite == True (see config section)
                     if overwrite:
