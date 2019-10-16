@@ -121,6 +121,7 @@ while True:
     # Add the handler to the root logger
     logging.getLogger('').addHandler(console)
 
+    logging.info('--------------------- SYSTEM INITIALIZE ---------------------')
     try: # Try to connect to FTP
         if username == '' and password == '':   # if username and password are blank, don't try to connect with them.
             ftp.login()
