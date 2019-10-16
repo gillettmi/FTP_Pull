@@ -139,4 +139,5 @@ while True:
         break
     ftp.quit()
     logging.info('Disconnected from FTP client. You may now close the window.')
+    logging.info('---------------------- END OF SESSION ----------------------')
     break
