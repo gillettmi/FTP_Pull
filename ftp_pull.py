@@ -121,7 +121,7 @@ while True:
     # Add the handler to the root logger
     logging.getLogger('').addHandler(console)
 
-    logging.info('--------------------- SYSTEM INITIALIZE ---------------------')
+    logging.info('---- SYSTEM INITIALIZE -------------------------------------')
     try: # Try to connect to FTP
         if username == '' and password == '':   # if username and password are blank, don't try to connect with them.
             ftp.login()
@@ -138,5 +138,5 @@ while True:
         logging.error('ERROR: Incorrect login credentials. Please enter the correct FTP username, password, or FTP URL and try again.')
     ftp.quit()
     logging.info('Disconnected from FTP client. You may now close the window.')
-    logging.info('---------------------- END OF SESSION ----------------------')
+    logging.info('---- END OF SESSION ----------------------------------------')
     break
