@@ -135,7 +135,7 @@ while True:
             except error_perm:                  # Incorrect directory config
                 logging.error('ERROR: The system cannot find the file specified. Please reconfigure the specified directory and try again.')
     except error_perm:                          # incorrect user config
-        logging.error('ERROR: Incorrect login credentials. Please enter the correct FTP username / password and try again.')
+        logging.error('ERROR: Incorrect login credentials. Please enter the correct FTP username, password, or FTP URL and try again.')
     ftp.quit()
     logging.info('Disconnected from FTP client. You may now close the window.')
     logging.info('---------------------- END OF SESSION ----------------------')
