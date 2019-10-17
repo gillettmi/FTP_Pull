@@ -87,7 +87,7 @@ def ftp_pull(ftp_path):
 
                     # Only delete and re-download if overwrite == True (see config section)
                     if overwrite:
-                        logging.info('Overwrite is set to True. Deleting previous files and re-downloading')
+                        logging.info('Overwrite is set to True. Deleting previous files and re-downloading.')
                         try:
                             os.remove(local_filename)
                             download(local_filename, remote_size, filename)
@@ -128,16 +128,14 @@ while True:
         else:
             ftp.login(username, password)       # connect with defined credentials
         logging.info('Connected to FTP client')
-    except error_perm:                          # incorrect user config
-        logging.error('ERROR: Incorrect login credentials. Please enter the correct FTP username / password and try again.')
-        break
-    try:
         logging.info('Downloading location set to {0}'.format(local_path))
         for directory in remote_directories:
-            ftp_pull(directory)
-    except error_perm:                          # Incorrect directory config
-        logging.error('ERROR: The system cannot find the file specified. Please reconfigure the specified directory and try again.')
-        break
+            try:
+                ftp_pull(directory)
+            except error_perm:                  # Incorrect directory config
+                logging.error('ERROR: The system cannot find the file specified. Please reconfigure the specified directory and try again.')
+    except error_perm:                          # incorrect user config
+        logging.error('ERROR: Incorrect login credentials. Please enter the correct FTP username / password and try again.')
     ftp.quit()
     logging.info('Disconnected from FTP client. You may now close the window.')
     logging.info('---------------------- END OF SESSION ----------------------')
