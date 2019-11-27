@@ -20,9 +20,9 @@ local_path = './downloads'
 # Remote locations to pull files from
 # if you want to pull from more than one directory, uncomment and change the section(s) below
 remote_directories = (
-    # '~/directory1/directory1',
+    '~/directory/directory1',
     # '~/directory1/directory2',
-    '~/directory/directory',
+    # '~/directory1/directory3',
 )
 
 # File extensions /// Specify which file extensions you want the program to look for
@@ -106,9 +106,7 @@ def ftp_pull(ftp_path):
                 download(local_filename, remote_size, filename)
 
 
-# MAIN PROGRAM ##############################################################
-
-while True:
+def main():
     # Setup logging
     logging.basicConfig(
         level=logging.DEBUG,
@@ -125,7 +123,7 @@ while True:
     # Add the handler to the root logger
     logging.getLogger('').addHandler(console)
 
-    logging.info('---- SYSTEM INITIALIZE -------------------------------------')
+    logging.info('---- SYSTEM INITIALIZE ----')
     try:  # Try to connect to FTP
         if username == '' and password == '':  # if username and password are blank, don't try to connect with them.
             ftp.login()
@@ -146,5 +144,8 @@ while True:
             'again.')
     ftp.quit()
     logging.info('Disconnected from FTP client. You may now close the window.')
-    logging.info('---- END OF SESSION ----------------------------------------')
-    break
+    logging.info('---- END OF SESSION ----')
+
+
+# MAIN PROGRAM ##############################################################
+main()
