@@ -55,8 +55,7 @@ def ftp_pull(ftp_path):
         try:
             os.makedirs(local_path)
         except PermissionError:
-            logging.error('ERROR: You do not have the necessary permissions.',
-                          'Unable to make new directory at {0}'.format(local_path))
+            logging.error('ERROR: You do not have the necessary permissions. Unable to make new directory at {0}'.format(local_path))
 
     # Change directory
     logging.info('Moving to {0}'.format(ftp_path))
@@ -85,9 +84,7 @@ def ftp_pull(ftp_path):
 
                 # If local file is < remote file, delete local and re-download (only if overwrite == True)
                 if local_size != remote_size:
-                    logging.info(
-                        'File sizes are not the same. It appears previous download may have failed.'.format(remote_size,
-                                                                                                            local_size))
+                    logging.info('File sizes are not the same. It appears previous download may have failed.'.format(remote_size, local_size))
 
                     # Only delete and re-download if overwrite == True (see config section)
                     if overwrite:
@@ -135,13 +132,9 @@ def main():
             try:
                 ftp_pull(directory)
             except error_perm:  # Incorrect directory config
-                logging.error(
-                    'ERROR: The system cannot find the file specified. Please reconfigure the specified directory and '
-                    'try again.')
+                logging.error('ERROR: The system cannot find the file specified. Please reconfigure the specified directory and try again.')
     except error_perm:  # incorrect user config
-        logging.error(
-            'ERROR: Incorrect login credentials. Please enter the correct FTP username, password, or FTP URL and try '
-            'again.')
+        logging.error('ERROR: Incorrect login credentials. Please enter the correct FTP username, password, or FTP URL and try again.')
     ftp.quit()
     logging.info('Disconnected from FTP client. You may now close the window.')
     logging.info('---- END OF SESSION ----')
