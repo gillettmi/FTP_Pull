@@ -44,6 +44,7 @@ def download(local_filename, remote_size, filename):
     file = open(local_filename, 'wb')
     logging.info(
         'Downloading file: {0} | Filesize: {1} GB'.format(local_filename, round((remote_size / 1000000000), 2)))
+    logging.info('Downloading file: {0} | Filesize: {1} GB'.format(local_filename, round((remote_size / 1000000000), 2)))
     ftp.retrbinary('RETR ' + filename, file.write)
     logging.info('{0} downloaded.'.format(filename))
 
