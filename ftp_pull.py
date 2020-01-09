@@ -42,7 +42,7 @@ ftp = FTP(ftp_url)
 # Acual download function /// this is used if the file meets all of the checks in ftp_pull.
 def download(local_filename, remote_size, filename):
 
-    logging.info('Downloading file: {0} | Filesize: {1} GB'.format(local_filename, round((remote_size / 1000000000), 2)))
+    logging.info('Downloading file: {0} | Filesize: {1} GB'.format(filename, round((remote_size / 1000000000), 2)))
 
     with open(local_filename, 'wb') as file:
         # setup tqdm progress bar with necessary units and such
