@@ -6,13 +6,14 @@
 import logging
 import os.path
 from ftplib import FTP, error_perm
+import tqdm as tqdm
 
 # CONFIG ####################################################################
 
 # Login information and server URL /// Input your own information here
 username = ''
 password = ''
-ftp_url = ''
+ftp_url = 'ftp.website.com'
 
 # Where you want the files to save
 local_path = './downloads'
@@ -32,19 +33,29 @@ extensions = ('.mp4', '.mpg', '.mov')
 overwrite = True
 
 # Log file location
-log_file = 'ftp_pull_log.txt'
+log_file = local_path + '/ftp_pull_log.txt'
 
 # FUNCTIONS #################################################################
 
 ftp = FTP(ftp_url)
 
-
 # Acual download function /// this is used if the file meets all of the checks in ftp_pull.
 def download(local_filename, remote_size, filename):
-    file = open(local_filename, 'wb')
+
     logging.info('Downloading file: {0} | Filesize: {1} GB'.format(local_filename, round((remote_size / 1000000000), 2)))
-    ftp.retrbinary('RETR ' + filename, file.write)
-    logging.info('{0} downloaded.'.format(filename))
+
+    with open(local_filename, 'wb') as file:
+        # setup tqdm progress bar with necessary units and such
+        with tqdm.tqdm(total=remote_size, unit_scale=True, desc='Downloading', unit='bits', position=0, leave=True) as pbar:
+            # update tqdm with each block downloaded and saved to file
+            def file_write(data):
+                file.write(data)
+                pbar.update(len(data))
+            # Begin download
+            ftp.retrbinary('RETR ' + filename, file_write)
+            # download confirmation and close file
+            logging.info('{0} downloaded.'.format(filename))
+            file.close()
 
 
 # Pull file from FTP site
@@ -121,10 +132,7 @@ def main():
 
     logging.info('---- SYSTEM INITIALIZE ----')
     try:  # Try to connect to FTP
-        if username == '' and password == '':  # if username and password are blank, don't try to connect with them.
-            ftp.login()
-        else:
-            ftp.login(username, password)  # connect with defined credentials
+        ftp.login(username, password)  # connect with defined credentials
         logging.info('Connected to FTP client')
         logging.info('Downloading location set to {0}'.format(local_path))
         for directory in remote_directories:
