@@ -39,9 +39,7 @@ overwrite = True
 # Create timestamp
 timestamp=datetime.now()
 
-# Setup the log file name
-log_file = ('logs/{0}_ftp_pull_log.txt'.format(timestamp.strftime('%Y-%m-%d')))
-
+# Setup FTP login
 ftp = FTP(ftp_url)
 
 # Acual download function /// this is used if the file meets all of the checks in ftp_pull.
@@ -120,14 +118,8 @@ def ftp_pull(ftp_path):
 
 def main():
 
-    # Make log folder if it's not there
-    if not os.path.exists('./logs'):
-        try:
-            os.makedirs('./logs')
-        except PermissionError:
-            print('Unable to create ./logs folder. Please check permissions and try running the program again.')
-            sys.exit
-
+    log_file = (local_path + '{0}_ftp_pull_log.txt'.format(timestamp.strftime('%Y-%m-%d')))
+    print(log_file)
     # Setup logging
     logging.basicConfig(
         level=logging.DEBUG,
