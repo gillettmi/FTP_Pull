@@ -7,6 +7,8 @@ import logging
 import os.path
 from ftplib import FTP, error_perm
 import tqdm as tqdm
+from datetime import datetime
+import sys
 
 # CONFIG ####################################################################
 
@@ -32,10 +34,13 @@ extensions = ('.mp4', '.mpg', '.mov')
 # Set overwrite to True if you would like to overwrite files that may be incomplete downloads.
 overwrite = True
 
-# Log file location
-log_file = local_path + '/ftp_pull_log.txt'
-
 # FUNCTIONS #################################################################
+
+# Create timestamp
+timestamp=datetime.now()
+
+# Setup the log file name
+log_file = ('logs/{0}_ftp_pull_log.txt'.format(timestamp.strftime('%Y-%m-%d')))
 
 ftp = FTP(ftp_url)
 
@@ -114,6 +119,15 @@ def ftp_pull(ftp_path):
 
 
 def main():
+
+    # Make log folder if it's not there
+    if not os.path.exists('./logs'):
+        try:
+            os.makedirs('./logs')
+        except PermissionError:
+            print('Unable to create ./logs folder. Please check permissions and try running the program again.')
+            sys.exit
+
     # Setup logging
     logging.basicConfig(
         level=logging.DEBUG,
@@ -133,7 +147,7 @@ def main():
     logging.info('---- SYSTEM INITIALIZE ----')
     try:  # Try to connect to FTP
         ftp.login(username, password)  # connect with defined credentials
-        logging.info('Connected to FTP client')
+        logging.info('Connected to FTP site {0}'.format(ftp_url))
         logging.info('Downloading location set to {0}'.format(local_path))
         for directory in remote_directories:
             try:
