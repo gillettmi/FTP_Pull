@@ -119,7 +119,7 @@ def ftp_pull(ftp_path):
 def main():
 
     log_file = (local_path + '{0}_ftp_pull_log.txt'.format(timestamp.strftime('%Y-%m-%d')))
-    print(log_file)
+
     # Setup logging
     logging.basicConfig(
         level=logging.DEBUG,
