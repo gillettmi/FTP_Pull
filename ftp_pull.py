@@ -41,14 +41,15 @@ timestamp=datetime.now()
 # Setup FTP login
 ftp = FTP(ftp_url)
 
-# Acual download function /// this is used if the file meets all of the checks in ftp_pull.
-def download(local_filename, remote_size, filename):
 
+# Actual download function /// this is used if the file meets all of the checks in ftp_pull.
+def download(local_filename, remote_size, filename):
     logging.info('Downloading file: {0} | Filesize: {1} GB'.format(filename, round((remote_size / 1000000000), 2)))
 
     with open(local_filename, 'wb') as file:
         # setup tqdm progress bar with necessary units and such
-        with tqdm.tqdm(total=remote_size, unit_scale=True, desc='Downloading', unit='bits', position=0, leave=True) as pbar:
+        with tqdm.tqdm(
+                total=remote_size, unit_scale=True, desc='Downloading', unit='bits', position=0, leave=True) as pbar:
             # update tqdm with each block downloaded and saved to file
             def file_write(data):
                 file.write(data)
@@ -67,7 +68,7 @@ def ftp_pull(ftp_path):
         try:
             os.makedirs(local_path)
         except PermissionError:
-            logging.error('ERROR: You do not have the necessary permissions. Unable to make new directory at {0}'.format(local_path))
+            logging.error('PERMISSION ERROR: Unable to make new directory at {0}'.format(local_path))
 
     # Change directory
     logging.info('Moving to {0}'.format(ftp_path))
@@ -96,7 +97,7 @@ def ftp_pull(ftp_path):
 
                 # If local file is < remote file, delete local and re-download (only if overwrite == True)
                 if local_size != remote_size:
-                    logging.info('File sizes are not the same. It appears previous download may have failed.'.format(remote_size, local_size))
+                    logging.info('File sizes are not the same. It appears previous download may have failed.')
 
                     # Only delete and re-download if overwrite == True (see config section)
                     if overwrite:
@@ -105,7 +106,7 @@ def ftp_pull(ftp_path):
                             os.remove(local_filename)
                             download(local_filename, remote_size, filename)
                         except PermissionError:
-                            logging.error('ERROR: You do not have the necessary permissions.')
+                            logging.error('PERMISSION ERROR: You do not have the necessary permissions.')
                     else:
                         logging.info('Overwrite is set to False. Existing file has been skipped.')
 
@@ -144,9 +145,9 @@ def main():
             try:
                 ftp_pull(directory)
             except error_perm:  # Incorrect directory config
-                logging.error('ERROR: The system cannot find the file specified. Please reconfigure the specified directory and try again.')
+                logging.error('ERROR: The system cannot find the folder specified.')
     except error_perm:  # incorrect user config
-        logging.error('ERROR: Incorrect login credentials. Please enter the correct FTP username, password, or FTP URL and try again.')
+        logging.error('ERROR: Incorrect login credentials.')
     ftp.quit()
     logging.info('Disconnected from FTP client. You may now close the window.')
     logging.info('---- END OF SESSION ----')
