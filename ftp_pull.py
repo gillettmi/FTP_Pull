@@ -8,7 +8,6 @@ import os.path
 from ftplib import FTP, error_perm
 import tqdm as tqdm
 from datetime import datetime
-import sys
 
 # CONFIG ####################################################################
 
