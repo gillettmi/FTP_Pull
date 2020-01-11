@@ -36,7 +36,7 @@ overwrite = True
 # FUNCTIONS #################################################################
 
 # Create timestamp
-timestamp=datetime.now()
+timestamp = datetime.now()
 
 # Setup FTP login
 ftp = FTP(ftp_url)
@@ -44,7 +44,7 @@ ftp = FTP(ftp_url)
 
 # Actual download function /// this is used if the file meets all of the checks in ftp_pull.
 def download(local_filename, remote_size, filename):
-    logging.info('Downloading file: {0} | Filesize: {1} GB'.format(filename, round((remote_size / 1000000000), 2)))
+    logging.info('Downloading file: {0} | File size: {1} GB'.format(filename, round((remote_size / 1000000000), 2)))
 
     with open(local_filename, 'wb') as file:
         # setup tqdm progress bar with necessary units and such
@@ -93,7 +93,7 @@ def ftp_pull(ftp_path):
 
                 # Get the size of the existing file
                 local_size = os.stat(local_filename).st_size
-                logging.info('Remote file size: {0} bytes | Local file size: {1} bytes'.format(remote_size, local_size))
+                logging.info('Remote file size: {0} | Local file size: {1}'.format(remote_size, local_size))
 
                 # If local file is < remote file, delete local and re-download (only if overwrite == True)
                 if local_size != remote_size:
@@ -118,7 +118,8 @@ def ftp_pull(ftp_path):
 
 def main():
 
-    log_file = (local_path + '{0}_ftp_pull_log.txt'.format(timestamp.strftime('%Y-%m-%d')))
+    log_file = (local_path + '/{0}_ftp_pull_log.txt'.format(timestamp.strftime('%Y-%m-%d')))
+    print(log_file)
 
     # Setup logging
     logging.basicConfig(
