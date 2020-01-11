@@ -2,7 +2,7 @@
 This is a program written in Python3 that searches for files on a FTP site with a given extension and downloads them to a local folder. This program uses ftplib to access the server as well as logging to save a program log.
 
 # Dependencies
-This program relies on tqdm to work and show the progress of the downloading files. Run 'pip install tqdm' using your computer's terminal to install it.
+This program relies on tqdm to work and show the progress of the downloading files. Run `pip install tqdm` using your computer's terminal to install it.
 
 # How-To
 To use the program properly, you'll need to provide it with a few variables. Here's what you can change:
