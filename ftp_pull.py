@@ -8,26 +8,9 @@ import os.path
 from ftplib import FTP, error_perm
 import tqdm as tqdm
 from datetime import datetime
-from default_config import *
-
-# What is the current directory (DON'T TOUCH)
-current_dir = os.getcwd()
-
-# FOLDER CONFIG ========================================================================================================
-
-# Where you want the files to save
-download_folder = os.path.join(current_dir, './downloads')
-
-# This is where the logs will save
-log_directory = (os.path.join(current_dir, 'logs'))
+from config.default_config import *
 
 # FUNCTIONS ============================================================================================================
-
-# Create timestamp
-timestamp = datetime.now()
-
-# Setup FTP login
-ftp = FTP(ftp_url)
 
 
 # Actual download function /// this is used if the file meets all of the checks in ftp_pull.
@@ -150,4 +133,23 @@ def main():
 
 # MAIN PROGRAM =========================================================================================================
 if __name__ == '__main__':
+
+    # What is the current directory (DON'T TOUCH)
+    current_dir = os.getcwd()
+
+    # Create timestamp
+    timestamp = datetime.now()
+
+    # Setup where the config folder (and the files in it)
+    config_directory = os.path.join(current_dir, 'config')
+    config_files = os.listdir(config_directory)
+
+    # Download and log folder locations
+    download_folder = os.path.join(current_dir, 'downloads')
+    log_directory = os.path.join(current_dir, 'logs')
+
+    # Setup FTP login
+    ftp = FTP(ftp_url)
+
+    # Run
     main()
