@@ -5,15 +5,13 @@ This is a program written in Python3 that searches for files on a FTP site with 
 This program relies on tqdm to work and show the progress of the downloading files. Run `pip install tqdm` using your computer's terminal to install it.
 
 # How-To
-To use the program properly, you'll need to provide it with a few variables. Here's what you can change:
+To use the program properly, you'll need to provide it with a few variables. Go into the default_config.py file and change the following variables:
 
 **username** The username that you use to login to your FTP site
 
 **password** The password to login to your FTP site
 
 **ftp_url** The URL that you use to access the FTP site. Don't include ftp://, just do ftp.website.com
-
-**local_path** This is where the program will save the files it finds on the remote site to your local computer. You can also do network storages too. The default is set to './downloads', which will be in the same folder that the ftp_pull.py file is located. If this folder doesn't exist, the program will make it.
 
 **remote_directories** This list includes all of the folders that you want to pull from. If you want to search multiple directories for files, simply uncomment the first two lines and add in your file structure here. Just make sure to include '~/' in the beginning, that way it always returns to home and brances out from there.
 
