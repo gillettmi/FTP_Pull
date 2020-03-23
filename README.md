@@ -19,7 +19,5 @@ To use the program properly, you'll need to provide it with a few variables. Go 
 
 **overwrite** If set to True, the program will overwrite any local files that are not the same size as the remote files. If the program is disconnected for any reason, you can enable this to overwrite files that we're completely downloaded.
 
-**log_file** is where the program will save it's log file. Default is in the same folder as the downloads folder
-
 # Help
 If you need help, feel free to send me a message on GitHub. I'm still working out a few kinks in the program, so any constructive criticism is greatly appreciated.
