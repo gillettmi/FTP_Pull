@@ -8,38 +8,20 @@ import os.path
 from ftplib import FTP, error_perm
 import tqdm as tqdm
 from datetime import datetime
+from default_config import *
 
 # What is the current directory (DON'T TOUCH)
 current_dir = os.getcwd()
 
-# CONFIG ####################################################################
-
-# Login information and server URL /// Input your own information here
-username = ''
-password = ''
-ftp_url = 'ftp.website.com'
+# FOLDER CONFIG ========================================================================================================
 
 # Where you want the files to save
 download_folder = os.path.join(current_dir, './downloads')
 
-# Remote locations to pull files from
-# if you want to pull from more than one directory, uncomment and change the section(s) below
-remote_directories = (
-    '~/directory/directory1',
-    # '~/directory1/directory2',
-    # '~/directory1/directory3',
-)
-
 # This is where the logs will save
 log_directory = (os.path.join(current_dir, 'logs'))
 
-# File extensions /// Specify which file extensions you want the program to look for
-extensions = ('.mp4', '.mpg', '.mov')
-
-# Set overwrite to True if you would like to overwrite files that may be incomplete downloads.
-overwrite = True
-
-# FUNCTIONS #################################################################
+# FUNCTIONS ============================================================================================================
 
 # Create timestamp
 timestamp = datetime.now()
@@ -166,6 +148,6 @@ def main():
     logging.info('---- END OF SESSION ----')
 
 
-# MAIN PROGRAM ##############################################################
+# MAIN PROGRAM =========================================================================================================
 if __name__ == '__main__':
     main()
