@@ -5,7 +5,7 @@ This is a program written in Python3 that searches for files on a FTP site with 
 This program relies on tqdm to work and show the progress of the downloading files. Run `pip3 install tqdm` using your computer's terminal to install it.
 
 # How-To
-To use the program properly, you'll need to provide it with a few variables. Go into the default_config.py file and change the following variables:
+To use the program properly, you'll need to provide it with a few variables. Go into the `default_config.py` file and change the following variables:
 
 **username** The username that you use to login to your FTP site
 
