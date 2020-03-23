@@ -9,6 +9,9 @@ from ftplib import FTP, error_perm
 import tqdm as tqdm
 from datetime import datetime
 
+# What is the current directory (DON'T TOUCH)
+current_dir = os.getcwd()
+
 # CONFIG ####################################################################
 
 # Login information and server URL /// Input your own information here
@@ -17,7 +20,7 @@ password = ''
 ftp_url = 'ftp.website.com'
 
 # Where you want the files to save
-local_path = './downloads'
+download_folder = os.path.join(current_dir, './downloads')
 
 # Remote locations to pull files from
 # if you want to pull from more than one directory, uncomment and change the section(s) below
@@ -26,6 +29,9 @@ remote_directories = (
     # '~/directory1/directory2',
     # '~/directory1/directory3',
 )
+
+# This is where the logs will save
+log_directory = (os.path.join(current_dir, 'logs'))
 
 # File extensions /// Specify which file extensions you want the program to look for
 extensions = ('.mp4', '.mpg', '.mov')
@@ -64,11 +70,11 @@ def download(local_filename, remote_size, filename):
 # Pull file from FTP site
 def ftp_pull(ftp_path):
     # Create new local folder for downloaded Files
-    if not os.path.exists(local_path):
+    if not os.path.exists(download_folder):
         try:
-            os.makedirs(local_path)
+            os.makedirs(download_folder)
         except PermissionError:
-            logging.error('PERMISSION ERROR: Unable to make new directory at {0}'.format(local_path))
+            logging.error('PERMISSION ERROR: Unable to make new directory at {0}'.format(download_folder))
 
     # Change directory
     logging.info('Moving to {0}'.format(ftp_path))
@@ -85,7 +91,7 @@ def ftp_pull(ftp_path):
         if filename.endswith(extensions):
 
             # Get filename and size of remote files
-            local_filename = os.path.join(local_path, filename)
+            local_filename = os.path.join(download_folder, filename)
             remote_size = ftp.size(filename)
 
             # Don't download if it already exists
@@ -118,8 +124,14 @@ def ftp_pull(ftp_path):
 
 def main():
 
-    log_file = (local_path + '/{0}_ftp_pull_log.txt'.format(timestamp.strftime('%Y-%m-%d')))
-    print(log_file)
+    log_file = os.path.join(log_directory, '{0}_ftp_pull_log.txt'.format(timestamp.strftime('%Y-%m-%d')))
+
+    # Make the log folder if it's not already there
+    if not os.path.exists(log_directory):
+        try:
+            os.makedirs(log_directory)
+        except PermissionError:
+            print('ERROR: Unable to make new directory at {0}'.format(log_file))
 
     # Setup logging
     logging.basicConfig(
@@ -141,7 +153,7 @@ def main():
     try:  # Try to connect to FTP
         ftp.login(username, password)  # connect with defined credentials
         logging.info('Connected to FTP site {0}'.format(ftp_url))
-        logging.info('Downloading location set to {0}'.format(local_path))
+        logging.info('Downloading location set to {0}'.format(download_folder))
         for directory in remote_directories:
             try:
                 ftp_pull(directory)
