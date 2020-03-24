@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
 
-# This program automates the downloading of DW programs from a remote FTP site
-# Written by Michael Gillett, 2019
-
 import logging
 import os.path
 from ftplib import FTP, error_perm
 import tqdm as tqdm
 from datetime import datetime
-from config.default_config import *
 
 # FUNCTIONS ============================================================================================================
 
@@ -33,7 +29,7 @@ def download(local_filename, remote_size, filename):
 
 
 # Pull file from FTP site
-def ftp_pull(ftp_path):
+def ftp_pull(ftp_path, download_folder, extensions, overwrite):
     # Create new local folder for downloaded Files
     if not os.path.exists(download_folder):
         try:
@@ -46,11 +42,11 @@ def ftp_pull(ftp_path):
     ftp.cwd(ftp_path)
 
     # Get names of all files in folder
-    filenames = ftp.nlst()
-    logging.info('Files in folder:{0}'.format(filenames))
+    ftp_files = ftp.nlst()
+    logging.info('Files in folder:{0}'.format(ftp_files))
 
     # for loop to get all files in folder
-    for filename in filenames:
+    for filename in ftp_files:
 
         # Only downloads files with given extensions
         if filename.endswith(extensions):
@@ -87,7 +83,21 @@ def ftp_pull(ftp_path):
                 download(local_filename, remote_size, filename)
 
 
-def main():
+def main(username, password, ftp_url, remote_directories, extensions, overwrite):
+
+    # Setup FTP login
+    global ftp
+    ftp = FTP(ftp_url)
+
+    # What is the current directory (DON'T TOUCH)
+    current_dir = os.getcwd()
+
+    # Create timestamp
+    timestamp = datetime.now()
+
+    # Download and log folder locations
+    download_folder = os.path.join(current_dir, 'downloads')
+    log_directory = os.path.join(current_dir, 'logs')
 
     log_file = os.path.join(log_directory, '{0}_ftp_pull_log.txt'.format(timestamp.strftime('%Y-%m-%d')))
 
@@ -121,7 +131,7 @@ def main():
         logging.info('Downloading location set to {0}'.format(download_folder))
         for directory in remote_directories:
             try:
-                ftp_pull(directory)
+                ftp_pull(directory, download_folder, extensions, overwrite)
             except error_perm:  # Incorrect directory config
                 logging.error('ERROR: The system cannot find the folder specified.')
     except error_perm:  # incorrect user config
@@ -129,27 +139,3 @@ def main():
     ftp.quit()
     logging.info('Disconnected from FTP client. You may now close the window.')
     logging.info('---- END OF SESSION ----')
-
-
-# MAIN PROGRAM =========================================================================================================
-if __name__ == '__main__':
-
-    # What is the current directory (DON'T TOUCH)
-    current_dir = os.getcwd()
-
-    # Create timestamp
-    timestamp = datetime.now()
-
-    # Setup where the config folder (and the files in it)
-    config_directory = os.path.join(current_dir, 'config')
-    config_files = os.listdir(config_directory)
-
-    # Download and log folder locations
-    download_folder = os.path.join(current_dir, 'downloads')
-    log_directory = os.path.join(current_dir, 'logs')
-
-    # Setup FTP login
-    ftp = FTP(ftp_url)
-
-    # Run
-    main()
