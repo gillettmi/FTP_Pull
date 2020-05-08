@@ -22,7 +22,6 @@ extensions = ('.mp4', '.mpg', '.mov')
 # Set overwrite to True if you would like to overwrite files that may be incomplete downloads.
 overwrite = True
 
-# Pull only the most recent file. Set to "False" if you want to pull everything.
 pull_recent = True
 
 # RUN ==================================================================================================================
